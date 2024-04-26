@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.routers import users
 
 app = FastAPI()
 
@@ -24,3 +25,5 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"Hello": "World"}
+
+app.include_router(users.router)

@@ -3,3 +3,6 @@ uvicorn
 pytest
 pytest-cov
 httpx
+python-dotenv
+requests
+git+https://github.com/EvenTITO/eventitolibs.git

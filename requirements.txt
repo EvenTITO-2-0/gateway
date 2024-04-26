@@ -1,2 +1,5 @@
 fastapi
 uvicorn
+python-dotenv
+requests
+git+https://github.com/EvenTITO/eventitolibs.git
