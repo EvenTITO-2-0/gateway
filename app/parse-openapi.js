@@ -12,11 +12,13 @@ const changePathsPrefix = (data, r) => {
 const addAuthSecurity = (data, r) => {
   for (path in data.paths) {
     if (!r.authExceptions.includes(path)) {
-      data.paths[path]["security"] = [
-        {
-          "HTTPBearer": []
-        }
-      ]
+      for (item in data.paths[path]) {
+        data.paths[path][item]["security"] = [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
     }
   }
   data["components"]["securitySchemes"] = {
