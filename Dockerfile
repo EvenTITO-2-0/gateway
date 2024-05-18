@@ -1,16 +1,7 @@
-FROM python:3.11-slim
+FROM node:18
 
-WORKDIR /code
-
-RUN apt-get update && apt-get install -y git
-
-COPY ./requirements.txt /code/requirements.txt
-
-RUN pip install --no-cache-dir --upgrade -r  /code/requirements.txt && \
-    rm -rf /root/.cache /var/lib/apt/lists/* /tmp/*
-
-RUN apt-get remove -y git && apt-get autoremove -y
-
-COPY ./app /code/app
-
-CMD uvicorn app.main:app --host=0.0.0.0 --port=${PORT}
+WORKDIR /usr/src
+COPY package*.json ./
+RUN npm install
+COPY ./app ./app
+CMD ["node", "app/index.js"]
