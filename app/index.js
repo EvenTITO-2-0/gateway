@@ -1,11 +1,12 @@
 require('dotenv').config();
 const express = require('express')
 
-const {ROUTES} = require("./src/routes");
+const {ROUTES} = require("./routes");
 
-const {setupLogging} = require("./src/logging");
-const {setupProxies} = require("./src/proxy");
-const {setupAuth} = require("./src/auth");
+const {setupLogging} = require("./logging");
+const {setupProxies} = require("./proxy");
+const {setupAuth} = require("./auth");
+const {setupParseOpenApi} = require("./parse-openapi");
 
 const app = express()
 const port = process.env.PORT;
@@ -13,6 +14,7 @@ const port = process.env.PORT;
 setupLogging(app);
 setupAuth(app, ROUTES);
 setupProxies(app, ROUTES);
+setupParseOpenApi(app, ROUTES);
 
 
 app.listen(port, () => {
