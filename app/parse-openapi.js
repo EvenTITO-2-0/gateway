@@ -1,14 +1,43 @@
 const axios = require('axios')
 
+
+const changePathsPrefix = (data, r) => {
+  for (path in data.paths) {
+    data.paths[r.url+path] = data.paths[path];
+    delete data.paths[path];
+  }
+  return data;
+}
+
+const addAuthSecurity = (data, r) => {
+  for (path in data.paths) {
+    if (!r.authExceptions.includes(path)) {
+      data.paths[path]["security"] = [
+        {
+          "HTTPBearer": []
+        }
+      ]
+    }
+  }
+  data["components"]["securitySchemes"] = {
+    "HTTPBearer": {
+      "type": "http",
+      "scheme": "bearer"
+    }      
+  }
+  return data;
+}
+
+
 const parseOpenApiJson = (app, r) => {
   app.get(r.url+'/openapi.json', (req, res) => {
     axios.get(r.proxy.target + '/openapi.json')
     .then(response => {
       var data = response.data;
-      for (path in data.paths) {
-        data.paths[r.url+path] = data.paths[path];
-        delete data.paths[path];
+      if (r.auth) {
+        data = addAuthSecurity(data, r);
       }
+      data = changePathsPrefix(data, r);
       res.send(data)
     })
     .catch(error => {
