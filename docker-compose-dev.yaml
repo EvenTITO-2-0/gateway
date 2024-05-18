@@ -4,7 +4,7 @@ services:
     image: gateway:latest
     environment:
       - PORT=12345
-      - BACKEND_URL=http://users:12345
+      - BACKEND_URL=http://backend:12345
     volumes:
       - ./firebasekey.json:/usr/src/firebasekey.json
       - ./app:/usr/src/app

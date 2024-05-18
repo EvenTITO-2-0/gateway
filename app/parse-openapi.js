@@ -31,6 +31,22 @@ const addAuthSecurity = (data, r) => {
 }
 
 
+const removeXUserIdHeader = (data, r) => {
+  const headerToRemove = 'X-User-Id';
+  for (path in data.paths) {
+    for (method in data.paths[path]) {
+      console.log(method);
+      if (data.paths[path][method].hasOwnProperty('parameters')) {
+        console.log(data.paths[path][method]['parameters']);
+        data.paths[path][method]['parameters'] = data.paths[path][method]['parameters'].filter(param => param.name != headerToRemove); 
+        console.log(data.paths[path][method]['parameters']);
+      }
+    }
+  }
+  return data;
+}
+
+
 const parseOpenApiJson = (app, r) => {
   app.get(r.url+'/openapi.json', (req, res) => {
     axios.get(r.proxy.target + '/openapi.json')
@@ -38,6 +54,7 @@ const parseOpenApiJson = (app, r) => {
       var data = response.data;
       if (r.auth) {
         data = addAuthSecurity(data, r);
+        data = removeXUserIdHeader(data, r);
       }
       data = changePathsPrefix(data, r);
       res.send(data)
