@@ -1,3 +1,5 @@
+const { fixRequestBody } = require('http-proxy-middleware');
+
 const ROUTES = [
     {
         url: '/api/v1',
@@ -11,6 +13,9 @@ const ROUTES = [
                 [`^/api/v1`]: '',
             },
             pathFilter: ['!/openapi.json', '!/docs'],
+            on: {
+                proxyReq: fixRequestBody,
+            },            
         },
     },
 ]

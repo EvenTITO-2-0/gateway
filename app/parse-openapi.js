@@ -35,11 +35,8 @@ const removeXUserIdHeader = (data, r) => {
   const headerToRemove = 'X-User-Id';
   for (path in data.paths) {
     for (method in data.paths[path]) {
-      console.log(method);
       if (data.paths[path][method].hasOwnProperty('parameters')) {
-        console.log(data.paths[path][method]['parameters']);
         data.paths[path][method]['parameters'] = data.paths[path][method]['parameters'].filter(param => param.name != headerToRemove); 
-        console.log(data.paths[path][method]['parameters']);
       }
     }
   }
