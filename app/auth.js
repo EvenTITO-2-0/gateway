@@ -26,6 +26,9 @@ const firebaseAuthMiddleware = (exceptions) => {
       .then((decodedToken) => {
         delete req.headers.authorization;
         req.headers['X-User-Id'] = decodedToken.uid;
+        if (req.path === '/users/' && (req.method === 'POST' || req.method === 'PUT')) {
+          req.body['email'] = decodedToken.email;
+        }
         next();
       })
       .catch((error) => {

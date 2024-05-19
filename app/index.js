@@ -11,6 +11,7 @@ const {setupParseOpenApi} = require("./parse-openapi");
 const app = express()
 const port = process.env.PORT;
 
+app.use(express.json())
 setupLogging(app);
 setupAuth(app, ROUTES);
 setupProxies(app, ROUTES);
