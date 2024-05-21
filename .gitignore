@@ -130,3 +130,7 @@ dist
 .pnp.*
 
 firebasekey.json
+
+#Intellij
+.idea
+.DS_Store
