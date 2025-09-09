@@ -4,7 +4,7 @@ const ROUTES = [
     {
         url: '/api/v1',
         auth: true,
-        authExceptions: ['/openapi.json', '/docs'],
+        authExceptions: ['/openapi.json', '/docs', '/provider/oauth/callback'],
         hasOpenApi: true,
         proxy: {
             target: process.env.BACKEND_URL,
@@ -14,7 +14,14 @@ const ROUTES = [
             },
             pathFilter: ['!/openapi.json', '!/docs'],
             on: {
-                proxyReq: fixRequestBody,
+                proxyReq: (proxyReq, req, res) => {
+                    if (req.body) {
+                        const bodyData = JSON.stringify(req.body);
+                        proxyReq.setHeader('Content-Type', 'application/json');
+                        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+                        proxyReq.write(bodyData);
+                    }
+                },
             },            
         },
     },

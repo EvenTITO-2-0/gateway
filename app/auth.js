@@ -10,10 +10,21 @@ admin.initializeApp({
 const firebaseAuthMiddleware = (exceptions) => {
   return (req, res, next) => {
     if (exceptions.includes(req.path)) {
-      // No auth needed for exceptions.
       next();
       return;
     }
+
+    const pathOnly = req.path;
+    //TODO: check if can avoid this
+    if (/^\/api\/v1\/events\/[a-f0-9\-]+\/provider\/webhook\/?$/i.test(pathOnly)) {
+      next();
+      return;
+    }
+    if (/^\/api\/v1\/events\/[a-f0-9\-]+\/provider\/return\/(success|failure|pending)\/?$/i.test(pathOnly)) {
+      next();
+      return;
+    }
+
     const authorizationHeader = req.headers.authorization;
 
     if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
@@ -39,16 +50,15 @@ const firebaseAuthMiddleware = (exceptions) => {
 }
 
 
-
 const setupAuth = (app, routes) => {
-  routes.forEach(r => {
+  routes.forEach((r) => {
     if (r.auth) {
-      app.use(r.url, firebaseAuthMiddleware(r.authExceptions), function (req, res, next) {
-        next();
-      });
+      const exceptions = r.authExceptions || [];
+      app.use(r.url, firebaseAuthMiddleware(exceptions));
     }
-  })
+  });
 }
 
 
-exports.setupAuth = setupAuth
+exports.firebaseAuthMiddleware = firebaseAuthMiddleware;
+exports.setupAuth = setupAuth;
