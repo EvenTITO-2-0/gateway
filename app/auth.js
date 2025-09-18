@@ -14,13 +14,13 @@ const firebaseAuthMiddleware = (exceptions) => {
       return;
     }
 
-    const pathOnly = req.path;
-    //TODO: check if can avoid this
-    if (/^\/api\/v1\/events\/[a-f0-9\-]+\/provider\/webhook\/?$/i.test(pathOnly)) {
-      next();
-      return;
-    }
-    if (/^\/api\/v1\/events\/[a-f0-9\-]+\/provider\/return\/(success|failure|pending)\/?$/i.test(pathOnly)) {
+
+    const pathOnly = (req.originalUrl || req.path).split('?')[0];
+
+    const webhookRegex = /^(?:\/api\/v1)?\/events\/[a-f0-9\-]+\/provider\/webhook\/?$/i;
+    const returnsRegex = /^(?:\/api\/v1)?\/events\/[a-f0-9\-]+\/provider\/return\/(success|failure|pending)\/?$/i;
+
+    if (webhookRegex.test(pathOnly) || returnsRegex.test(pathOnly)) {
       next();
       return;
     }

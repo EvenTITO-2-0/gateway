@@ -4,7 +4,7 @@ const ROUTES = [
     {
         url: '/api/v1',
         auth: true,
-        authExceptions: ['/openapi.json', '/docs', '/provider/oauth/callback'],
+        authExceptions: ['/openapi.json', '/docs', '/provider/oauth/callback', /^\/events\/[a-f0-9\-]+\/provider\/webhook\/?$/i, /^\/events\/[a-f0-9\-]+\/provider\/return\/(success|failure|pending)\/?$/i],
         hasOpenApi: true,
         proxy: {
             target: process.env.BACKEND_URL,
@@ -21,8 +21,8 @@ const ROUTES = [
                         proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
                         proxyReq.write(bodyData);
                     }
-                },
-            },            
+                },            
+            },
         },
     },
 ]
