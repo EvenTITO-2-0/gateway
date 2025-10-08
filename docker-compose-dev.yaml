@@ -4,7 +4,7 @@ services:
     image: gateway:latest
     environment:
       - PORT=12345
-      - BACKEND_URL=http://backend:12345
+      - BACKEND_URL=http://backend:8080
       - FIREBASE_KEY=${FIREBASE_KEY}
     volumes:
       - ./app:/usr/src/app
