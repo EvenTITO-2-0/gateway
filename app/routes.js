@@ -15,13 +15,15 @@ const ROUTES = [
             pathFilter: ['!/openapi.json', '!/docs'],
             on: {
                 proxyReq: (proxyReq, req, res) => {
-                    if (req.body) {
+                    const hasBody = req.body && Object.keys(req.body).length > 0;
+                    const methodAllowsBody = req.method && !['GET', 'HEAD'].includes(req.method.toUpperCase());
+                    if (hasBody && methodAllowsBody) {
                         const bodyData = JSON.stringify(req.body);
                         proxyReq.setHeader('Content-Type', 'application/json');
                         proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
                         proxyReq.write(bodyData);
                     }
-                },            
+                },
             },
         },
     },
